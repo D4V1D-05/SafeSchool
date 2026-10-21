@@ -158,7 +158,7 @@ const Profesor = () => {
       
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-sky-100 bg-white/80 px-4 py-4 shadow-sm backdrop-blur sm:px-10">
         <h1 className="text-xl font-black tracking-tight text-sky-700 sm:text-2xl">
-          SafeSchool{' '}
+          SafeApp{' '}
           <span className="text-base font-normal text-slate-500">| Panel Docente</span>
         </h1>
         <Link

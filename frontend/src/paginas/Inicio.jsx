@@ -16,7 +16,7 @@ const Inicio = () => {
       {/* Tarjeta principal */}
       <main className="relative w-full max-w-2xl rounded-[2rem] bg-white/80 p-6 text-center shadow-xl shadow-sky-100/80 ring-1 ring-white sm:p-10">
         <h1 className="bg-gradient-to-r from-sky-600 to-emerald-500 bg-clip-text text-4xl font-black tracking-tight text-transparent sm:text-5xl">
-          SafeSchool
+          SafeApp
         </h1>
         <p className="mx-auto mb-8 mt-3 max-w-sm text-base text-slate-500 sm:mb-10 sm:text-lg">
           Sistema de Prevención de Violencia Escolar
