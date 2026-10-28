@@ -21,11 +21,19 @@ const Profesor = () => {
   const [textoChat, setTextoChat] = useState('');
   const finalChatRef = useRef(null);
 
-  // --- FUNCIÓN AUXILIAR PARA COLORES DE RIESGO (ahora devuelve clases de Tailwind) ---
+  // --- FUNCIONES AUXILIARES PARA COLORES (devuelven clases de Tailwind) ---
   const obtenerColorRiesgo = (riesgo) => {
-    if (riesgo === 'Alto') return 'bg-rose-100 text-rose-800 ring-rose-300';
-    if (riesgo === 'Medio') return 'bg-amber-100 text-amber-800 ring-amber-300';
-    return 'bg-emerald-100 text-emerald-800 ring-emerald-300'; // Bajo
+    if (riesgo === 'Alto') return 'bg-[#B3261E]/10 text-[#B3261E] ring-[#B3261E]/40';
+    if (riesgo === 'Medio') return 'bg-[#8A5300]/10 text-[#8A5300] ring-[#8A5300]/40';
+    if (riesgo === 'Bajo') return 'bg-[#17703F]/10 text-[#17703F] ring-[#17703F]/40';
+    return 'bg-[#1F2933]/5 text-[#1F2933] ring-[#1F2933]/20'; // Pendiente / sin clasificar
+  };
+
+  const obtenerColorEstado = (estado) => {
+    const e = (estado || '').toUpperCase();
+    if (e.includes('CUMPLID')) return 'bg-[#17703F]/10 text-[#17703F] ring-[#17703F]/40'; // CUMPLIDO
+    if (e.includes('ATENCI')) return 'bg-[#8A5300]/10 text-[#8A5300] ring-[#8A5300]/40'; // EN ATENCIÓN
+    return 'bg-[#B3261E]/10 text-[#B3261E] ring-[#B3261E]/40'; // PENDIENTE
   };
 
   // --- LÓGICA DE ALERTAS ---
@@ -154,16 +162,17 @@ const Profesor = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-sky-50 via-violet-50 to-emerald-50 font-sans text-slate-700">
+    <div className="flex min-h-screen flex-col bg-[#F5F7FA] font-sans text-[#1F2933]">
       
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-sky-100 bg-white/80 px-4 py-4 shadow-sm backdrop-blur sm:px-10">
-        <h1 className="text-xl font-black tracking-tight text-sky-700 sm:text-2xl">
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-[#1F2933]/10 bg-white px-4 py-4 shadow-sm sm:px-10">
+        <h1 className="text-xl font-black tracking-tight text-[#eb9b1a] sm:text-2xl">
           SafeApp{' '}
-          <span className="text-base font-normal text-slate-500">| Panel Docente</span>
+          <span className="text-base font-normal text-[#1F2933]/70">| Panel Docente</span>
         </h1>
         <Link
           to="/"
-          className="rounded-full border border-rose-300 bg-rose-50 px-5 py-2 text-sm font-bold text-rose-600 transition hover:bg-rose-100 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-200"
+          className="rounded-full border-2 border-[#eb9b1a] bg-white px-5 py-2 text-sm font-bold text-[#1F2933] transition hover:bg-[#eb9b1a]/15 active:scale-95
+            focus:outline-none focus-visible:ring-4 focus-visible:ring-[#eb9b1a]/50"
         >
           Cerrar Sesión
         </Link>
@@ -172,33 +181,42 @@ const Profesor = () => {
       <main className="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-8">
         
         {/* Pestañas tipo dashboard */}
-        <div className="mb-8 inline-flex max-w-full gap-1 overflow-x-auto rounded-2xl bg-white/90 p-1.5 shadow-sm ring-1 ring-sky-100">
+        <div
+          role="tablist"
+          className="mb-8 inline-flex max-w-full gap-1 overflow-x-auto rounded-2xl border border-[#1F2933]/10 bg-white p-1.5 shadow-sm"
+        >
           <button
+            role="tab"
+            aria-selected={tabActiva === 'alertas'}
             onClick={() => setTabActiva('alertas')}
-            className={`whitespace-nowrap rounded-xl px-5 py-2.5 text-sm font-bold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 sm:text-base ${
+            className={`whitespace-nowrap rounded-xl px-5 py-2.5 text-sm font-bold text-[#1F2933] transition focus:outline-none focus-visible:ring-4 focus-visible:ring-[#eb9b1a]/50 sm:text-base ${
               tabActiva === 'alertas'
-                ? 'bg-sky-200 text-sky-900 shadow-sm ring-1 ring-sky-300'
-                : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                ? 'bg-[#eb9b1a] shadow-sm'
+                : 'hover:bg-[#1F2933]/5'
             }`}
           >
             🚨 Alertas en Vivo
           </button>
           <button
+            role="tab"
+            aria-selected={tabActiva === 'denuncias'}
             onClick={() => setTabActiva('denuncias')}
-            className={`whitespace-nowrap rounded-xl px-5 py-2.5 text-sm font-bold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 sm:text-base ${
+            className={`whitespace-nowrap rounded-xl px-5 py-2.5 text-sm font-bold text-[#1F2933] transition focus:outline-none focus-visible:ring-4 focus-visible:ring-[#eb9b1a]/50 sm:text-base ${
               tabActiva === 'denuncias'
-                ? 'bg-sky-200 text-sky-900 shadow-sm ring-1 ring-sky-300'
-                : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                ? 'bg-[#eb9b1a] shadow-sm'
+                : 'hover:bg-[#1F2933]/5'
             }`}
           >
             📝 Bandeja de Denuncias
           </button>
           <button
+            role="tab"
+            aria-selected={tabActiva === 'chat'}
             onClick={() => setTabActiva('chat')}
-            className={`whitespace-nowrap rounded-xl px-5 py-2.5 text-sm font-bold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 sm:text-base ${
+            className={`whitespace-nowrap rounded-xl px-5 py-2.5 text-sm font-bold text-[#1F2933] transition focus:outline-none focus-visible:ring-4 focus-visible:ring-[#eb9b1a]/50 sm:text-base ${
               tabActiva === 'chat'
-                ? 'bg-sky-200 text-sky-900 shadow-sm ring-1 ring-sky-300'
-                : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                ? 'bg-[#eb9b1a] shadow-sm'
+                : 'hover:bg-[#1F2933]/5'
             }`}
           >
             💬 Chat de Soporte
@@ -211,19 +229,19 @@ const Profesor = () => {
             
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-2xl font-extrabold tracking-tight text-slate-700 sm:text-3xl">
+                <h2 className="text-2xl font-extrabold tracking-tight text-[#1F2933] sm:text-3xl">
                   Monitoreo de Emergencias
                 </h2>
-                <p className="mt-2 text-slate-500">
+                <p className="mt-2 text-[#1F2933]/70">
                   Alertas en tiempo real enviadas por los alumnos.
                 </p>
               </div>
               <button
                 onClick={manejarAlarma}
-                className={`shrink-0 rounded-2xl px-6 py-3 font-extrabold transition-all duration-150 active:translate-y-1 focus:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 ${
+                className={`shrink-0 rounded-2xl px-6 py-3 font-extrabold transition-all duration-150 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5F7FA] ${
                   audioPermitido
-                    ? 'bg-rose-300 text-rose-950 shadow-[0_5px_0_0_#fb7185,0_0_24px_rgba(251,113,133,0.45)] hover:bg-rose-200 active:shadow-[0_1px_0_0_#fb7185] focus-visible:ring-rose-300'
-                    : 'bg-sky-300 text-sky-950 shadow-[0_5px_0_0_#38bdf8,0_12px_20px_-8px_rgba(56,189,248,0.5)] hover:bg-sky-200 active:shadow-[0_1px_0_0_#38bdf8] focus-visible:ring-sky-300'
+                    ? 'bg-[#B3261E] text-white shadow-[0_8px_24px_-4px_rgba(179,38,30,0.55)] hover:brightness-110 focus-visible:ring-[#B3261E]/50'
+                    : 'bg-[#eb9b1a] text-[#1F2933] shadow-md shadow-[#eb9b1a]/30 hover:bg-[#d98f14] focus-visible:ring-[#eb9b1a]/50'
                 }`}
               >
                 {audioPermitido ? '🔕 Apagar Alarma' : '🔔 Activar Alarma Sonora'}
@@ -231,30 +249,30 @@ const Profesor = () => {
             </div>
 
             {/* Mapa */}
-            <div className="relative flex h-72 flex-col items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-sky-300 bg-sky-50 shadow-lg shadow-sky-100/70 sm:h-96 bg-[linear-gradient(to_right,rgba(125,211,252,0.35)_1px,transparent_1px),linear-gradient(to_bottom,rgba(125,211,252,0.35)_1px,transparent_1px)] bg-[size:40px_40px]">
-              <p className="relative z-10 rounded-full bg-white/80 px-5 py-2 font-bold text-sky-800 shadow-sm ring-1 ring-sky-100">
+            <div className="relative flex h-72 flex-col items-center justify-center overflow-hidden rounded-3xl border-2 border-dashed border-[#1F2933]/30 bg-white shadow-sm sm:h-96 bg-[linear-gradient(to_right,rgba(31,41,51,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(31,41,51,0.08)_1px,transparent_1px)] bg-[size:40px_40px]">
+              <p className="relative z-10 rounded-full border border-[#1F2933]/10 bg-white px-5 py-2 font-bold text-[#1F2933] shadow-sm">
                 🗺️ Mapa de Geolocalización (Simulación)
               </p>
               <div className="absolute left-[30%] top-[40%] h-6 w-6">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-rose-300 opacity-75" />
-                <span className="relative inline-flex h-6 w-6 rounded-full bg-rose-400 shadow-[0_0_20px_#fb7185] ring-4 ring-white/70" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#B3261E] opacity-60" />
+                <span className="relative inline-flex h-6 w-6 rounded-full bg-[#B3261E] shadow-[0_0_20px_rgba(179,38,30,0.7)] ring-4 ring-white" />
               </div>
-              <div className="absolute left-[60%] top-[70%] h-5 w-5 rounded-full bg-rose-400 shadow-[0_0_15px_#fb7185] ring-4 ring-white/70" />
+              <div className="absolute left-[60%] top-[70%] h-5 w-5 rounded-full bg-[#B3261E] shadow-[0_0_15px_rgba(179,38,30,0.7)] ring-4 ring-white" />
             </div>
 
-            <div className="rounded-3xl bg-white/90 p-5 shadow-lg shadow-sky-100/70 ring-1 ring-sky-100 sm:p-8">
-              <h3 className="mb-4 text-lg font-bold text-rose-600">
+            <div className="rounded-3xl border border-[#1F2933]/10 bg-white p-5 shadow-sm sm:p-8">
+              <h3 className="mb-4 text-lg font-bold text-[#1F2933]">
                 🚨 Historial de Alertas Recientes
               </h3>
               {alertas.length === 0 ? (
-                <p className="p-8 text-center text-slate-500">
+                <p className="p-8 text-center text-[#1F2933]/70">
                   No hay alertas por el momento. El colegio está tranquilo.
                 </p>
               ) : (
-                <div className="overflow-x-auto rounded-2xl ring-1 ring-slate-200">
+                <div className="overflow-x-auto rounded-2xl ring-1 ring-[#1F2933]/10">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+                      <tr className="bg-[#F5F7FA] text-xs uppercase tracking-wide text-[#1F2933]/70">
                         <th className="px-4 py-3 font-bold">ID</th>
                         <th className="px-4 py-3 font-bold">Hora</th>
                         <th className="px-4 py-3 font-bold">Ubicación / Detalle</th>
@@ -262,15 +280,15 @@ const Profesor = () => {
                         <th className="px-4 py-3 font-bold">Estado</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-[#1F2933]/10">
                       {alertas.map((a) => (
-                        <tr key={a.id} className="transition hover:bg-sky-50/50">
-                          <td className="px-4 py-3 font-semibold text-slate-600">#{a.id}</td>
-                          <td className="whitespace-nowrap px-4 py-3 text-slate-600">{a.fecha_hora}</td>
+                        <tr key={a.id} className="transition hover:bg-[#F5F7FA]">
+                          <td className="px-4 py-3 font-semibold text-[#1F2933]">#{a.id}</td>
+                          <td className="whitespace-nowrap px-4 py-3 text-[#1F2933]">{a.fecha_hora}</td>
                           <td className="px-4 py-3">
-                            <div className="text-slate-700">{a.ubicacion}</div>
+                            <div className="text-[#1F2933]">{a.ubicacion}</div>
                             {a.descripcion && (
-                              <div className="mt-0.5 text-xs text-slate-500">"{a.descripcion}"</div>
+                              <div className="mt-0.5 text-xs text-[#1F2933]/70">"{a.descripcion}"</div>
                             )}
                           </td>
                           <td className="px-4 py-3">
@@ -279,7 +297,7 @@ const Profesor = () => {
                             </span>
                           </td>
                           <td className="px-4 py-3">
-                            <span className="inline-block rounded-full bg-rose-100 px-3 py-0.5 text-xs font-bold text-rose-800 ring-1 ring-rose-200">
+                            <span className={`inline-block rounded-full px-3 py-0.5 text-xs font-bold ring-1 ${obtenerColorEstado(a.estado)}`}>
                               {a.estado}
                             </span>
                           </td>
@@ -295,19 +313,19 @@ const Profesor = () => {
 
         {/* --- PESTAÑA 2: DENUNCIAS PASIVAS --- */}
         {tabActiva === 'denuncias' && (
-          <div className="rounded-3xl bg-white/90 p-5 shadow-lg shadow-sky-100/70 ring-1 ring-sky-100 sm:p-8">
-            <h2 className="text-2xl font-extrabold tracking-tight text-slate-700 sm:text-3xl">
+          <div className="rounded-3xl border border-[#1F2933]/10 bg-white p-5 shadow-sm sm:p-8">
+            <h2 className="text-2xl font-extrabold tracking-tight text-[#1F2933] sm:text-3xl">
               Gestión de Denuncias Anónimas
             </h2>
-            <p className="mb-6 mt-2 text-slate-500">
+            <p className="mb-6 mt-2 text-[#1F2933]/70">
               La IA clasifica el riesgo del caso automáticamente.
             </p>
             
-            {denuncias.length === 0 ? <p className="text-slate-500">No hay denuncias registradas.</p> : (
-              <div className="overflow-x-auto rounded-2xl ring-1 ring-slate-200">
+            {denuncias.length === 0 ? <p className="text-[#1F2933]/70">No hay denuncias registradas.</p> : (
+              <div className="overflow-x-auto rounded-2xl ring-1 ring-[#1F2933]/10">
                 <table className="w-full text-left text-sm">
                   <thead>
-                    <tr className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+                    <tr className="bg-[#F5F7FA] text-xs uppercase tracking-wide text-[#1F2933]/70">
                       <th className="px-4 py-3 font-bold">Código</th>
                       <th className="px-4 py-3 font-bold">Fecha</th>
                       <th className="px-4 py-3 font-bold">Riesgo (IA)</th>
@@ -315,25 +333,25 @@ const Profesor = () => {
                       <th className="px-4 py-3 font-bold">Acciones</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-[#1F2933]/10">
                     {denuncias.map((d) => (
-                      <tr key={d.codigo_reporte} className="transition hover:bg-sky-50/50">
-                        <td className="px-4 py-3 font-bold text-sky-600">{d.codigo_reporte}</td>
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-600">{d.fecha_hora}</td>
+                      <tr key={d.codigo_reporte} className="transition hover:bg-[#F5F7FA]">
+                        <td className="px-4 py-3 font-bold text-[#1F2933]">{d.codigo_reporte}</td>
+                        <td className="whitespace-nowrap px-4 py-3 text-[#1F2933]">{d.fecha_hora}</td>
                         <td className="px-4 py-3">
                           <span className={`inline-block rounded-full px-3 py-0.5 text-xs font-bold ring-1 ${obtenerColorRiesgo(d.nivel_riesgo)}`}>
                             {d.nivel_riesgo || 'Pendiente'}
                           </span>
                         </td>
                         <td className="px-4 py-3">
-                          <span className="inline-block rounded-full bg-amber-100 px-3 py-0.5 text-xs font-bold text-amber-800 ring-1 ring-amber-200">
+                          <span className={`inline-block rounded-full px-3 py-0.5 text-xs font-bold ring-1 ${obtenerColorEstado(d.estado)}`}>
                             {d.estado}
                           </span>
                         </td>
                         <td className="px-4 py-3">
                           <button
                             onClick={() => setDenunciaSeleccionada(d)}
-                            className="rounded-xl bg-sky-100 px-4 py-2 text-sm font-bold text-sky-700 ring-1 ring-sky-200 transition hover:bg-sky-200 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
+                            className="rounded-xl bg-[#eb9b1a] px-4 py-2 text-sm font-bold text-[#1F2933] shadow-sm transition hover:bg-[#d98f14] active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#eb9b1a]/50"
                           >
                             🔍 Ver Detalles
                           </button>
@@ -347,17 +365,18 @@ const Profesor = () => {
 
             {/* MODAL DE DETALLE DE DENUNCIA */}
             {denunciaSeleccionada && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1F2933]/50 p-4 backdrop-blur-sm">
                 <div
                   role="dialog"
                   aria-modal="true"
-                  className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl ring-1 ring-sky-100 sm:p-8"
+                  aria-label="Detalle de la denuncia"
+                  className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl ring-1 ring-[#1F2933]/10 sm:p-8"
                 >
-                  <h3 className="mb-4 text-2xl font-extrabold text-slate-700">
-                    Reporte: <span className="text-sky-600">{denunciaSeleccionada.codigo_reporte}</span>
+                  <h3 className="mb-4 text-2xl font-extrabold text-[#1F2933]">
+                    Reporte: <span>{denunciaSeleccionada.codigo_reporte}</span>
                   </h3>
                   
-                  <div className="mb-6 rounded-2xl bg-slate-50 p-5 text-sm text-slate-700 ring-1 ring-slate-200">
+                  <div className="mb-6 rounded-2xl bg-[#F5F7FA] p-5 text-sm text-[#1F2933] ring-1 ring-[#1F2933]/10">
                     <p><strong>Fecha:</strong> {denunciaSeleccionada.fecha_hora}</p>
                     <p className="mt-2">
                       <strong>Nivel de Riesgo Evaluado por IA:</strong> 
@@ -366,7 +385,7 @@ const Profesor = () => {
                       </span>
                     </p>
                     <p className="mt-4"><strong>Descripción:</strong></p>
-                    <p className="mt-2 rounded-2xl bg-white p-4 italic text-slate-600 ring-1 ring-slate-200">
+                    <p className="mt-2 rounded-2xl bg-white p-4 italic text-[#1F2933] ring-1 ring-[#1F2933]/10">
                       "{denunciaSeleccionada.descripcion}"
                     </p>
                     
@@ -386,7 +405,7 @@ const Profesor = () => {
                                 <img
                                   src={urlArchivo}
                                   alt="Evidencia"
-                                  className="h-28 w-28 cursor-pointer rounded-2xl object-cover shadow-sm ring-2 ring-slate-200 transition hover:ring-sky-300"
+                                  className="h-28 w-28 cursor-pointer rounded-2xl object-cover shadow-sm ring-2 ring-[#1F2933]/10 transition hover:ring-[#eb9b1a]"
                                 />
                               </a>
                             );
@@ -396,7 +415,7 @@ const Profesor = () => {
                                 key={index}
                                 src={urlArchivo}
                                 controls
-                                className="w-52 rounded-2xl shadow-sm ring-2 ring-slate-200"
+                                className="w-52 rounded-2xl shadow-sm ring-2 ring-[#1F2933]/10"
                               />
                             );
                           } else {
@@ -406,7 +425,7 @@ const Profesor = () => {
                                 href={urlArchivo}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-1.5 rounded-2xl bg-slate-100 px-4 py-2.5 text-sm text-slate-700 ring-1 ring-slate-200 transition hover:bg-slate-200"
+                                className="flex items-center gap-1.5 rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold text-[#1F2933] ring-1 ring-[#1F2933]/15 transition hover:bg-[#eb9b1a]/15 hover:ring-[#eb9b1a]"
                               >
                                 📄 {archivo}
                               </a>
@@ -415,24 +434,24 @@ const Profesor = () => {
                         })}
                       </div>
                     ) : (
-                      <p className="mt-2 rounded-2xl bg-white p-4 italic text-slate-500 ring-1 ring-slate-200">
+                      <p className="mt-2 rounded-2xl bg-white p-4 italic text-[#1F2933]/70 ring-1 ring-[#1F2933]/10">
                         No se adjuntaron archivos.
                       </p>
                     )}
                   </div>
                   
-                  <div className="mb-6 flex flex-col items-center rounded-2xl bg-sky-50 p-5 ring-1 ring-sky-100">
-                    <p className="mb-4 font-bold text-slate-700">Actualizar Estado del Caso:</p>
+                  <div className="mb-6 flex flex-col items-center rounded-2xl border border-[#1F2933]/10 bg-[#F5F7FA] p-5">
+                    <p className="mb-4 font-bold text-[#1F2933]">Actualizar Estado del Caso:</p>
                     <div className="flex w-full flex-col gap-3 sm:flex-row">
                       <button
                         onClick={() => cambiarEstado(denunciaSeleccionada.codigo_reporte, 'EN ATENCIÓN')}
-                        className="flex-1 rounded-2xl bg-amber-300 px-4 py-3 text-sm font-extrabold text-amber-950 shadow-[0_4px_0_0_#fbbf24] transition-all hover:bg-amber-200 active:translate-y-1 active:shadow-[0_1px_0_0_#fbbf24] focus:outline-none focus-visible:ring-4 focus-visible:ring-amber-200"
+                        className="flex-1 rounded-2xl bg-[#8A5300] px-4 py-3 text-sm font-extrabold text-white shadow-sm transition-all hover:brightness-110 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#8A5300]/40 focus-visible:ring-offset-2"
                       >
                         Marcar en Atención
                       </button>
                       <button
                         onClick={() => cambiarEstado(denunciaSeleccionada.codigo_reporte, 'CUMPLIDO')}
-                        className="flex-1 rounded-2xl bg-emerald-300 px-4 py-3 text-sm font-extrabold text-emerald-950 shadow-[0_4px_0_0_#34d399] transition-all hover:bg-emerald-200 active:translate-y-1 active:shadow-[0_1px_0_0_#34d399] focus:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+                        className="flex-1 rounded-2xl bg-[#17703F] px-4 py-3 text-sm font-extrabold text-white shadow-sm transition-all hover:brightness-110 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#17703F]/40 focus-visible:ring-offset-2"
                       >
                         Marcar Cumplido
                       </button>
@@ -441,7 +460,7 @@ const Profesor = () => {
                   
                   <button
                     onClick={() => setDenunciaSeleccionada(null)}
-                    className="w-full rounded-2xl bg-rose-100 px-4 py-3 font-bold text-rose-700 ring-1 ring-rose-200 transition hover:bg-rose-200 active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-200"
+                    className="w-full rounded-2xl border-2 border-[#1F2933]/20 bg-white px-4 py-3 font-bold text-[#1F2933] transition hover:border-[#1F2933]/40 hover:bg-[#F5F7FA] active:scale-[0.98] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#eb9b1a]/50"
                   >
                     Cerrar Ventana
                   </button>
@@ -453,33 +472,33 @@ const Profesor = () => {
 
         {/* --- PESTAÑA 3: CHAT (SISTEMA DE SALAS) --- */}
         {tabActiva === 'chat' && (
-          <div className="flex h-[70vh] max-h-[720px] min-h-[480px] flex-col overflow-hidden rounded-3xl bg-white shadow-lg shadow-sky-100/70 ring-1 ring-sky-100 md:flex-row">
+          <div className="flex h-[70vh] max-h-[720px] min-h-[480px] flex-col overflow-hidden rounded-3xl border border-[#1F2933]/10 bg-white shadow-sm md:flex-row">
             
             {/* LISTA DE SALAS (IZQUIERDA) */}
-            <aside className="flex max-h-56 w-full shrink-0 flex-col border-b border-slate-200 bg-white md:max-h-none md:w-80 md:border-b-0 md:border-r">
-              <h3 className="border-b border-slate-100 px-5 py-4 text-lg font-bold text-slate-700">
+            <aside className="flex max-h-56 w-full shrink-0 flex-col border-b border-[#1F2933]/10 bg-white md:max-h-none md:w-80 md:border-b-0 md:border-r">
+              <h3 className="border-b border-[#1F2933]/10 px-5 py-4 text-lg font-bold text-[#1F2933]">
                 Bandeja de Entrada
               </h3>
               <div className="flex-1 space-y-1 overflow-y-auto p-2">
                 {salasActivas.length === 0 ? (
-                  <p className="p-3 text-sm text-slate-500">No hay chats activos.</p>
+                  <p className="p-3 text-sm text-[#1F2933]/70">No hay chats activos.</p>
                 ) : (
                   salasActivas.map((sala) => (
                     <button 
                       key={sala.sala_id} 
                       onClick={() => setSalaSeleccionada(sala)}
-                      className={`flex w-full items-center gap-3 rounded-2xl p-3 text-left transition focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 ${
+                      className={`flex w-full items-center gap-3 rounded-2xl p-3 text-left transition focus:outline-none focus-visible:ring-4 focus-visible:ring-[#eb9b1a]/50 ${
                         salaSeleccionada?.sala_id === sala.sala_id
-                          ? 'bg-sky-100 ring-1 ring-sky-200'
-                          : 'hover:bg-slate-50'
+                          ? 'bg-[#eb9b1a]/15 ring-1 ring-[#eb9b1a]'
+                          : 'hover:bg-[#F5F7FA]'
                       }`}
                     >
-                      <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet-100 text-xl ring-1 ring-violet-200">
+                      <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#eb9b1a]/20 text-xl ring-1 ring-[#eb9b1a]/40">
                         🎓
                       </span>
                       <span className="min-w-0 flex-1">
-                        <strong className="block text-sm text-sky-700">{sala.sala_id}</strong>
-                        <span className="block truncate text-sm text-slate-500">
+                        <strong className="block text-sm text-[#1F2933]">{sala.sala_id}</strong>
+                        <span className="block truncate text-sm text-[#1F2933]/70">
                           {sala.ultimo_mensaje}
                         </span>
                       </span>
@@ -493,50 +512,56 @@ const Profesor = () => {
             <section className="flex min-h-0 flex-1 flex-col">
               {salaSeleccionada ? (
                 <>
-                  <h3 className="flex items-center gap-3 border-b border-slate-100 bg-white px-5 py-3 font-bold text-slate-700">
-                    <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-full bg-violet-100 ring-1 ring-violet-200">
+                  <h3 className="flex items-center gap-3 border-b border-[#1F2933]/10 bg-white px-5 py-3 font-bold text-[#1F2933]">
+                    <span aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-full bg-[#eb9b1a]/20 ring-1 ring-[#eb9b1a]/40">
                       🎓
                     </span>
                     <span>
-                      Conversación con: <span className="text-sky-600">{salaSeleccionada.sala_id}</span>
+                      Conversación con: <span>{salaSeleccionada.sala_id}</span>
                     </span>
                   </h3>
-                  <div className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto bg-gradient-to-b from-sky-50 to-violet-50 p-4 sm:p-6">
+                  <div
+                    role="log"
+                    aria-live="polite"
+                    aria-label="Mensajes de la conversación"
+                    className="flex min-h-0 flex-1 flex-col gap-2.5 overflow-y-auto bg-[#F5F7FA] p-4 sm:p-6"
+                  >
                     {mensajesChat.map((msg) => (
                       <div
                         key={msg.id}
                         className={
                           msg.remitente === 'profesor'
-                            ? 'max-w-[70%] self-end break-words rounded-2xl rounded-br-md bg-sky-200 px-4 py-2.5 text-slate-800 shadow-sm'
-                            : 'max-w-[70%] self-start break-words rounded-2xl rounded-bl-md bg-white px-4 py-2.5 text-slate-700 shadow-sm ring-1 ring-slate-200'
+                            ? 'max-w-[70%] self-end break-words rounded-2xl rounded-br-md bg-[#eb9b1a] px-4 py-2.5 text-[#1F2933] shadow-sm'
+                            : 'max-w-[70%] self-start break-words rounded-2xl rounded-bl-md border border-[#1F2933]/10 bg-white px-4 py-2.5 text-[#1F2933] shadow-sm'
                         }
                       >
                         <p className="m-0 text-[0.95rem] leading-snug">{msg.texto}</p>
-                        <span className="mt-1 block text-right text-[0.7rem] text-slate-500/80">
+                        <span className="mt-1 block text-right text-[0.7rem] text-[#1F2933]/80">
                           {msg.hora}
                         </span>
                       </div>
                     ))}
                     <div ref={finalChatRef}></div>
                   </div>
-                  <form onSubmit={enviarMensajeChat} className="flex items-center gap-3 border-t border-slate-100 bg-white p-3">
+                  <form onSubmit={enviarMensajeChat} className="flex items-center gap-3 border-t border-[#1F2933]/10 bg-white p-3">
                     <input 
                       type="text" 
+                      aria-label="Responde al alumno"
                       placeholder="Responde al alumno..." 
                       value={textoChat}
                       onChange={(e) => setTextoChat(e.target.value)}
-                      className="min-w-0 flex-1 rounded-full bg-slate-100 px-5 py-3 text-slate-700 placeholder-slate-400 transition focus:bg-white focus:outline-none focus:ring-4 focus:ring-sky-100"
+                      className="min-w-0 flex-1 rounded-full border border-[#1F2933]/15 bg-[#F5F7FA] px-5 py-3 text-[#1F2933] placeholder-[#1F2933]/50 transition focus:border-[#eb9b1a] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#eb9b1a]/30"
                     />
                     <button
                       type="submit"
-                      className="shrink-0 rounded-full bg-sky-300 px-6 py-3 font-extrabold text-sky-950 shadow-[0_3px_0_0_#38bdf8] transition-all hover:bg-sky-200 active:translate-y-0.5 active:shadow-[0_1px_0_0_#38bdf8] focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-200"
+                      className="shrink-0 rounded-full bg-[#eb9b1a] px-6 py-3 font-extrabold text-[#1F2933] transition-all hover:bg-[#d98f14] active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#eb9b1a]/50"
                     >
                       Enviar
                     </button>
                   </form>
                 </>
               ) : (
-                <div className="flex h-full flex-col items-center justify-center gap-2 bg-gradient-to-b from-sky-50 to-violet-50 text-slate-400">
+                <div className="flex h-full flex-col items-center justify-center gap-2 bg-[#F5F7FA] text-[#1F2933]/70">
                   <span aria-hidden="true" className="text-5xl">💬</span>
                   <p>Selecciona una conversación de la izquierda</p>
                 </div>
