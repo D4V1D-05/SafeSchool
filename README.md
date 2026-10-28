@@ -17,7 +17,7 @@ Para cumplir con el diseño del proyecto, el código se organiza siguiendo los p
 
 ## 🚀 Instrucciones de Ejecución
 
-### 1. Backend (Python)
+1. Backend (Python)
 Abre una terminal en la carpeta `backend`:
 ```bash
 # Crear y activar entorno virtual
@@ -32,7 +32,7 @@ python -m uvicorn main:app --reload
 
 El backend correrá en http://127.0.0.1:8000
 
-Frontend (React)
+2. Frontend (React)
 # Instalar dependencias
 npm install
 
