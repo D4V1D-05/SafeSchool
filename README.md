@@ -1,4 +1,4 @@
-# SafeApp (SafeSchool) - Sistema de Prevención de Violencia Escolar
+# SafeApp- Sistema de Prevención de Violencia Escolar
 
 MVP1 desarrollado para el curso de Diseño de Productos y Servicios. Consiste en una aplicación web/móvil para estudiantes (reporte anónimo y botón de pánico) y un panel de gestión para profesores/psicólogos (SafeAdmin).
 
